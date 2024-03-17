@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "jbyreaguilar_COMP304Sec003_Lab03"
-include(":app")
+rootProject.name = 'jbyreaguilar_COMP304Sec003_Lab03'
+include ':app'
