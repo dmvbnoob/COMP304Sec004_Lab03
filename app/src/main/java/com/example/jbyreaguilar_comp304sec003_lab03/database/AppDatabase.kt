@@ -21,7 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "airline_schedule.db")
-                    // .createFromAsset("database/your_prepopulated_database.db") // Uncomment if you have a prepopulated database
+                    .createFromAsset("databases/airline_schedule.db")
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
