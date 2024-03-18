@@ -14,26 +14,23 @@ class DetailedScheduleActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // Enable the Up button
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Get the airline name from the intent extras
-        val airlineName = intent.getStringExtra("airline_name")
+        val airlineName = intent.getStringExtra("airline_name") ?: "N/A"
 
-        // Set the airline name as the title of the Toolbar
         supportActionBar?.title = airlineName
 
-        // Get Arrival Time and Terminal Number from intent extras
-        val arrivalTime = intent.getStringExtra("arrival_time")
-        val terminalNumber = intent.getStringExtra("terminal_number")
+        val arrivalTime = intent.getStringExtra("arrival_time") ?: "N/A"
+        val terminalNumber = intent.getStringExtra("terminal_number") ?: "N/A"
+        val status = intent.getStringExtra("status") ?: "N/A"
 
-        // Initialize TextViews
         val arrivalTimeTextView = findViewById<TextView>(R.id.arrival_time)
         val terminalNumberTextView = findViewById<TextView>(R.id.terminal_number)
+        val statusTextView = findViewById<TextView>(R.id.status_text)
 
-        // Set values to TextViews
         arrivalTimeTextView.text = arrivalTime
         terminalNumberTextView.text = terminalNumber
+        statusTextView.text = status
     }
 
     // Handle clicks on the Up button

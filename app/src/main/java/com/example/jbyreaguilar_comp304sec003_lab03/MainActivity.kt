@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
                 putExtra("airline_name", schedule.airlineName)
                 putExtra("arrival_time", schedule.arrivalTime)
                 putExtra("terminal_number", schedule.terminal)
+                putExtra("status", schedule.status)
             }
             startActivity(intent)
         }
