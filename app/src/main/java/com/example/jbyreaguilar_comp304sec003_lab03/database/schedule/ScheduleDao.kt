@@ -1,6 +1,6 @@
 package com.example.jbyreaguilar_comp304sec003_lab03.database.schedule
 
-import Schedule
+import com.example.jbyreaguilar_comp304sec003_lab03.database.schedule.Schedule
 import androidx.room.Dao
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow

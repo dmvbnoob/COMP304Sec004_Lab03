@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.jbyreaguilar_comp304sec003_lab03"
-        minSdk 24
+        minSdk 26
         targetSdk 32
         versionCode 1
         versionName "1.0"

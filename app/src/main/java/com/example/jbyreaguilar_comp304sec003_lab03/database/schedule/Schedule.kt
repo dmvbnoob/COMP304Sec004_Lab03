@@ -1,3 +1,5 @@
+package com.example.jbyreaguilar_comp304sec003_lab03.database.schedule
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

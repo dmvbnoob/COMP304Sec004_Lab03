@@ -1,5 +1,6 @@
 package com.example.jbyreaguilar_comp304sec003_lab03
 
+import com.example.jbyreaguilar_comp304sec003_lab03.database.schedule.Schedule
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,8 +13,14 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
+import com.example.jbyreaguilar_comp304sec003_lab03.database.AppDatabase
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var scheduleAdapter: MyCustomAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,59 +30,56 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Air Schedule"
 
         val listView = findViewById<ListView>(R.id.main_listview)
-        listView.adapter = MyCustomAdapter()
+        scheduleAdapter = MyCustomAdapter(this@MainActivity, emptyList())
+        listView.adapter = scheduleAdapter
 
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            // Open new activity here
-            val intent = Intent(this@MainActivity, DetailedScheduleActivity::class.java)
-            intent.putExtra("airline_name", names[position])
-            intent.putExtra("arrival_time", time[position])
-            intent.putExtra("terminal_number", "T${position + 1}")
+        listView.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+            // Open new activity here using the clicked item's details
+            val schedule = scheduleAdapter.getItem(position) as Schedule // Cast to Schedule
+            val intent = Intent(this@MainActivity, DetailedScheduleActivity::class.java).apply {
+                putExtra("airline_name", schedule.airlineName)
+                putExtra("arrival_time", schedule.arrivalTime)
+                putExtra("terminal_number", schedule.terminal)
+            }
             startActivity(intent)
+        }
+
+        loadData()
+    }
+
+    private fun loadData() {
+        val dao = AppDatabase.getDatabase(this).scheduleDao()
+        lifecycleScope.launch {
+            dao.getAllSchedules().collect { schedules ->
+                scheduleAdapter.updateData(schedules)
+            }
         }
     }
 
-    private class MyCustomAdapter : BaseAdapter() {
+    private class MyCustomAdapter(private val context: Context, private var data: List<Schedule>) : BaseAdapter() {
 
-        //Responsible for how many rows in my list
-        override fun getCount(): Int {
-            return names.size
+        fun updateData(newData: List<Schedule>) {
+            data = newData
+            notifyDataSetChanged()
         }
 
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
+        override fun getCount(): Int = data.size
 
-        override fun getItem(position: Int): Any {
-            return "TEST STRING"
-        }
+        override fun getItem(position: Int): Any = data[position]
 
-        //For rendering out each row
+        override fun getItemId(position: Int): Long = position.toLong()
+
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-            val layoutInflater = LayoutInflater.from(parent?.context)
+            val layoutInflater = LayoutInflater.from(context)
             val rowMain = layoutInflater.inflate(R.layout.row_main, parent, false)
 
-            val airLineNameTextView = rowMain.findViewById<TextView>(R.id.airLineName)
-            airLineNameTextView.text = names[position]
+            val schedule = data[position]
 
-            val arrivalTimeTextView = rowMain.findViewById<TextView>(R.id.arrivalTime)
-            arrivalTimeTextView.text = time[position]
-
-            val terminalNumberTextView = rowMain.findViewById<TextView>(R.id.terminalNumber)
-            terminalNumberTextView.text = "T${position + 1}"
+            rowMain.findViewById<TextView>(R.id.airLineName).text = schedule.airlineName
+            rowMain.findViewById<TextView>(R.id.arrivalTime).text = schedule.arrivalTime
+            rowMain.findViewById<TextView>(R.id.terminalNumber).text = schedule.terminal
 
             return rowMain
         }
     }
-
-    companion object{
-        private val names = arrayListOf<String>(
-            "Air Canada", "Air France", "Air UK", "Air US", "Air Rose Mit"
-        )
-
-        private val time = arrayListOf<String>(
-            "11:22 AM", "12:34 PM", "09:45 AM", "03:00 PM", "05:55 PM"
-        )
-    }
-
 }

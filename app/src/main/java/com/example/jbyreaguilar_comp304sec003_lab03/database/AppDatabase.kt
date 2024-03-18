@@ -1,6 +1,6 @@
 package com.example.jbyreaguilar_comp304sec003_lab03.database
 
-import Schedule
+import com.example.jbyreaguilar_comp304sec003_lab03.database.schedule.Schedule
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
